@@ -1,0 +1,35 @@
+global
+  chroot        /var/lib/haproxy
+  pidfile       /var/run/haproxy.pid
+  maxconn       4000
+  user          haproxy
+  group         haproxy
+  stats socket  /var/lib/haproxy/stats
+
+defaults
+  mode                    tcp
+  log                     global
+  option                  redispatch
+  retries                 3
+  timeout http-request    10s
+  timeout queue           1m
+  timeout connect         10s
+  timeout client          1m
+  timeout server          1m
+  timeout http-keep-alive 10s
+  timeout check           10s
+  maxconn                 3000
+
+<%- @proxies.each_with_index do |proxy, i| -%>
+frontend frontend<%= i %>
+  mode tcp
+  bind <%= proxy[:interface] %>
+  default_backend backend<%= i %>
+
+backend backend<%= i %>
+  balance leastconn
+  <%- proxy[:endpoints].each_with_index do |x,k| -%>
+  server node<%= k %> <%= x %> check
+  <%- end -%>
+
+<%- end -%>
