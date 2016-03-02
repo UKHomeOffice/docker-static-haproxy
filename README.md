@@ -1,6 +1,6 @@
 # Static HAProxy Docker Container
 
-[![Build Status](https://travis-ci.org/UKHomeOffice/docker-static-haproxy.svg?branch=master)](https://travis-ci.org/UKHomeOffice/docker-static-haproxy)
+[![Docker Repository on Quay](https://quay.io/repository/ukhomeofficedigital/static-haproxy/status "Docker Repository on Quay")](https://quay.io/repository/ukhomeofficedigital/static-haproxy)
 
 This container aims to be a generic and very basic tcp proxy service with static backends, i.e. not fancy service discovery here :-). You can specify
 via the command line multiple proxies
