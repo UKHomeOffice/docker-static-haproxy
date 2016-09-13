@@ -2,7 +2,6 @@
 
 require 'erb'
 require 'optparse'
-require 'resolv'
 
 module Runner
   class Render
@@ -69,23 +68,10 @@ module Runner
       local_interface = elements.shift
       invalid "the local interface: #{local_interface} is invalid" unless ip_endpoint?(local_interface)
       # step: iterate the endpoints
-      eps = []
       elements.each do |x|
         invalid "the endpoint definition: #{x} is invalid, should be IP:PORT" unless endpoint?(x)
-        eps << resolv(x)
       end
-      yield local_interface, eps
-    end
-
-    def resolv(ep)
-      if ip_endpoint?(ep)
-        # An IP address
-        ep
-      else
-        # A host name
-        ep_ary = ep.split(':')
-        "#{Resolv.getaddress(ep_ary[0])}:#{ep_ary[1]}"
-      end
+      yield local_interface, elements
     end
 
     def ip_endpoint?(ep)
